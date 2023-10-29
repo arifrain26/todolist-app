@@ -11,3 +11,6 @@ this project a simple todo list using JS
 
 ## DataBase
 - Browser Local Storage
+
+## Live project Link
+https://todoapparif.netlify.app/
