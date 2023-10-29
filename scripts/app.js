@@ -17,13 +17,13 @@ const htmlTaskContent = ({ id, title, description, type, url }) => `
           <i class='fas fa-trash-alt' name=${id}></i>
         </button>
       </div>
+
       <div class='card-body'>
         ${
           url
             ? `<img width='100%' height='150px' style="object-fit: cover; object-position: center"  src=${url} alt='card image cap' class='card-image-top md-3 rounded-lg' />`
             : `
-      <img width='100%' height='150px' style="object-fit: cover; object-position: center" src="https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png" alt='card image cap' class='img-fluid place__holder__image mb-3' />
-      `
+          <img width='100%' height='150px' style="object-fit: cover; object-position: center" src="https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png" alt='card image cap' class='img-fluid place__holder__image mb-3' />`
         }
         <h4 class='task__card__title'>${title}</h4>
         <p class='description trim-3-lines text-muted' data-gram_editor='false'>
@@ -90,8 +90,12 @@ const loadInitialData = () => {
   });
 };
 
+//add task button call handlesubmit
+
 const handleSubmit = (event) => {
-  const id = `${Date.now()}`;
+  const id = `${Date.now()}`; //getting date for id
+
+  //getting value from form field
   const input = {
     url: document.getElementById("imageUrl").value,
     title: document.getElementById("taskTitle").value,
@@ -99,9 +103,13 @@ const handleSubmit = (event) => {
     type: document.getElementById("tags").value,
   };
 
+  //check for empty field
+
   if (input.title === "" || input.description === "" || input.type === "") {
     return alert("Please fill all the fields");
   }
+
+  // adding task to HTML
 
   taskContents.insertAdjacentHTML(
     "beforeend",
@@ -115,8 +123,10 @@ const handleSubmit = (event) => {
   updateLocalStorage();
 };
 
+// open task button on card
+
 const openTask = (e) => {
-  if (!e) e = window.event;
+  if (!e) e = window.event; //setting event to default / undefined
 
   const getTask = state.taskList.find(({ id }) => id === e.target.id);
   taskModal.innerHTML = htmlModalContent(getTask);
@@ -126,10 +136,11 @@ const deleteTask = (e) => {
   if (!e) e = window.event;
   const targetID = e.target.getAttribute("name");
   const type = e.target.tagName;
-  const removeTask = state.taskList.filter(({ id }) => id !== targetID);
+  const removeTask = state.taskList.filter(({ id }) => id !== targetID); //filter create new array
   state.taskList = removeTask;
 
   updateLocalStorage();
+
   if (type === "BUTTON") {
     return e.target.parentNode.parentNode.parentNode.parentNode.removeChild(
       e.target.parentNode.parentNode.parentNode
@@ -164,12 +175,14 @@ const editTask = (e) => {
   taskType = parentNode.childNodes[3].childNodes[7].childNodes[1];
   submitButton = parentNode.childNodes[5].childNodes[1];
 
+  //setattribute make field editable
+
   taskTitle.setAttribute("contenteditable", "true");
   taskDescription.setAttribute("contenteditable", "true");
   taskType.setAttribute("contenteditable", "true");
 
   submitButton.setAttribute("onclick", "saveEdit.apply(this, arguments)");
-  submitButton.removeAttribute("data-bs-toggle");
+  submitButton.removeAttribute("data-bs-toggle"); //remove for act like a button
   submitButton.removeAttribute("data-bs-target");
   submitButton.innerHTML = "Save Changes";
 };
@@ -191,7 +204,7 @@ const saveEdit = (e) => {
     taskDescription: taskDescription.innerHTML,
     taskType: taskType.innerHTML,
   };
-  
+
   let stateCopy = state.taskList;
 
   stateCopy = stateCopy.map((task) =>
